@@ -70,7 +70,7 @@ function main() {
             shiftDown = true;
         }
         else if(evt.which == 17) { // ctrl key
-            ctrlDown = false;
+            ctrlDown = true;
         }
     });
     
@@ -218,6 +218,20 @@ function selectPoints() {
         if (new Vector(mouseX, mouseY).subtract(points[i].position).length() < 20) {
             points[i].isSelected = true;
         }
+
+        if (ctrlDown){
+            var tempSprings = [];
+            for (var j = 0; j  < springs.length; j++) {
+                if (!(springs[j].first == points[i] || springs[j].second == points[i])) {
+                    tempSprings.push(springs[j]);
+                    foundDeletedSpring = true;
+                }
+            }
+            
+        }
+    }
+    if (foundDeletedSpring)
+        springs = tempSprings.splice(0);
 }
 
 // checks whether or not the spring exists.
