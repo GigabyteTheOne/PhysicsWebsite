@@ -2,10 +2,10 @@
     width:  100%;
     height: 100%;
     margin: 0px;
-    margin-top: 15px;
     background-color: whitesmoke;
     cursor: default;
     color: #c5c5c5;
+    overflow:hidden;
 }
 
 div{
@@ -14,7 +14,7 @@ div{
     -ms-user-select: none;
 }
 #instructions {
-    padding: 20px;
+    padding-left: 220px;
     z-index: 1;
     position: absolute;
     font-family: "Century Gothic";
@@ -22,11 +22,10 @@ div{
 }
 
 #myCanvas {
-    width:  100%;
-    height: 100%;
-    margin: 0px;
+    margin-left: 200px;
     position: absolute;
     z-index: 2;
+    overflow:auto;
 }
 
 #contact {
@@ -56,19 +55,11 @@ div{
     padding: 7px;
 }
 
-.button {
+#sideBar {
+    background: #A5A5A5;
+    position:absolute;
     top:0;
-    left: 0;
-    padding: 6px 10px;
-    border-radius: 2px 2px;
-    border: solid 1px rgb(153, 153, 153);
-    background: #F5F5F5;
-    color: #333;
-    text-decoration: none;
-    cursor: pointer;
-    text-align: center;
-    text-shadow: 0px 1px 1px rgba(255,255,255,1);
-    line-height: 1;
-    z-index: 100;
-    position: absolute;
+    left:0;
+    width:200px;
+    height:100%;
 }

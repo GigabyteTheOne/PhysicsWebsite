@@ -100,9 +100,9 @@ function main() {
         }
     });
     
-    $('#body').mousemove(function(evt) {
-        mouseX = evt.clientX;
-        mouseY = evt.clientY;
+    $('#myCanvas').mousemove(function(evt) {
+        mouseX = evt.offsetX;
+        mouseY = evt.offsetY;
     });
     
     setInterval(doFrame, 5);
@@ -132,7 +132,7 @@ function draw() {
 // Set up canvas, resize it to fit the screen and clear every frame.
 function setUpCanvas() {
     var ctx = $('#myCanvas')[0].getContext('2d');
-    windowWidth = window.innerWidth;
+    windowWidth = window.innerWidth - 200;
     windowHeight = window.innerHeight;
     ctx.canvas.width = windowWidth;
     ctx.canvas.height = windowHeight;
