@@ -104,7 +104,7 @@ function main() {
         mouseX = evt.offsetX;
         mouseY = evt.offsetY;
     });
-    
+    startButtons();
     setInterval(doFrame, 5);
 }
 
@@ -115,6 +115,16 @@ function updateSettings() {
     $('#FixedPointCreation')[0].innerHTML = fixedPointCreationActivated ? "enabled" : "disabled";
     $('#Paused')[0].innerHTML = paused ? "paused" : "unpaused";
     $('#SpringSize')[0].innerHTML = springLength;
+}
+
+function startButtons() {
+    $("#toggleGravity").click(function() { gravityActivated = !gravityActivated; });
+    $("#toggleSprings").click(function() { springDrawingActivated = !springDrawingActivated; });
+    $("#togglePoints").click(function() { pointDrawingActivatedd = !pointDrawingActivatedd; });
+    $("#increaseSpringSize").click(function() { springLength = springLength + 10 });
+    $("#decreaseSpringSize").click(function() { springLength = Math.max(springLength - 10, 10) });
+    $("#pause").click(function() { paused = !paused; });
+    $("#deletePoints").click(function() { points = []; springs = [] });
 }
 
 // Draws the scene.
@@ -271,7 +281,7 @@ function Spring(firstPoint, secondPoint) {
     this.draw = function (ctx) {
         if (springDrawingActivated) {
             ctx.lineWidth = 1;
-            ctx.strokeStyle = 'black';
+            ctx.strokeStyle = '#61CE3C';
             ctx.beginPath();
             ctx.moveTo(this.first.position.x, this.first.position.y);
             ctx.lineTo(this.second.position.x, this.second.position.y);
@@ -306,13 +316,13 @@ function MassPoint(posX, posY) {
     this.draw = function (ctx) {
         if (pointDrawingActivated) {
             if (this.isSelected) {
-                ctx.fillStyle = 'green';
+                ctx.fillStyle = '#FBDE2D';
             }
             else if (this.isFixed) {
-                ctx.fillStyle = 'red';
+                ctx.fillStyle = '#FF6BCF';
             }
             else {
-                ctx.fillStyle = 'black';
+                ctx.fillStyle = '#61CE3C';
             }
             ctx.beginPath();
             ctx.arc(this.position.x, this.position.y, boxSize / 2 - 1, 0, 2 * Math.PI, false);

@@ -17,30 +17,37 @@
             fjs.parentNode.insertBefore(js, fjs);
             }(document, 'script', 'facebook-jssdk'));
         </script>
-        <div id="sideBar"></div>
-        <div id='instructions'>
-            1. Left click to create new a new point. <br/>
-            2. Right click to select a point. If more than two points are selected, they will be connected with a spring. <br/>
-            3. Middle mouse click to hold a point; drag the mouse to drag the point. <br/><br/>
-            Press "p" to toggle drawing of points. <br/>
-            Press "s" to toggle drawing of springs. <br/>
-            Press "f" to toggle creating points that are fixed in space. <br/>
-            Press "u" to pause. <br/>
-            Press "=" to increase the spring size. <br/>
-            Press "-" to decrease the spring size. <br/>
-            Press "delete" to delete all the springs and points. <br/>
-            Press "space" to toggle gravity. <br/><br/>
-            <span id="settings">
-                Gravity is <span id="GravityOn" class="setting"></span> <br/>
-                Point drawing is <span id="PointDrawingOn" class="setting"></span> <br/>
-                Spring drawing is <span id="SpringDrawingOn" class="setting"></span> <br/>
-                Fixed point creation is <span id="FixedPointCreation" class="setting"></span> <br/>
-                The simulation is <span id="Paused" class="setting"></span> <br/>
-                The spring size is <span id="SpringSize" class="setting"></span>
-            </span>
+        <div id="sideBar">
+            <button class="button" id="toggleGravity">Toggle Gravity</button> <br/> <br/>
+            <button class="button" id="toggleSprings">Toggle Springs</button> <br/> <br/>
+            <button class="button" id="togglePoints">Toggle Points</button> <br/> <br/>
+            <button class="button" id="increaseSpringSize">Spring Length Up</button> <br/> <br/>
+            <button class="button" id="decreaseSpringSize">Spring Length Down</button> <br/> <br/>
+            <button class="button" id="deletePoints">Delete Everything</button> <br/> <br/>
+            <button class="button" id="pause">Pause</button> <br/> <br/>
         </div>
-        <div id="contact">
-            Contact me at subsbox@hotmail.com
+        <div id='instructions'>
+            <p>
+                1. Left click to create new a new point. <br/>
+                2. Right click to select a point. If more than two points are selected, they will be connected with a spring. <br/>
+                3. Middle mouse click to hold a point; drag the mouse to drag the point. <br/><br/>
+                Press "p" to toggle drawing of points. <br/>
+                Press "s" to toggle drawing of springs. <br/>
+                Press "f" to toggle creating points that are fixed in space. <br/>
+                Press "u" to pause. <br/>
+                Press "=" to increase the spring size. <br/>
+                Press "-" to decrease the spring size. <br/>
+                Press "delete" to delete all the springs and points. <br/>
+                Press "space" to toggle gravity. <br/><br/>
+                <span id="settings">
+                    Gravity is <span id="GravityOn" class="setting"></span> <br/>
+                    Point drawing is <span id="PointDrawingOn" class="setting"></span> <br/>
+                    Spring drawing is <span id="SpringDrawingOn" class="setting"></span> <br/>
+                    Fixed point creation is <span id="FixedPointCreation" class="setting"></span> <br/>
+                    The simulation is <span id="Paused" class="setting"></span> <br/>
+                    The spring size is <span id="SpringSize" class="setting"></span>
+                </span>
+            <p/>
         </div>
         <!--<div class="fb-like" data-href="http://www.chubmarine.com/" data-send="true" data-layout="button_count" data-width="80" data-show-faces="false"></div>-->
         <canvas id="myCanvas" oncontextmenu="return false;"></canvas>
