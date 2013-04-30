@@ -76,7 +76,7 @@ function main() {
         }
     });
     
-    $('#body').mousedown(function (evt) {
+    $('#myCanvas').mousedown(function (evt) {
         if (evt.button == 0) {
             leftMouseDown = true;
         }
