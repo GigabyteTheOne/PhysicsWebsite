@@ -21,6 +21,7 @@ var paused = false;
 var middleMouseDown = false;
 var shiftDown = false;
 var leftMouseDown = false;
+var ctrlDown = false;
 
 var points = [];
 var springs = [];
@@ -68,11 +69,17 @@ function main() {
         else if (evt.which == 16) { // shift key
             shiftDown = true;
         }
+        else if(evt.which == 17) { // ctrl key
+            ctrlDown = true;
+        }
     });
     
     $('body').keyup(function(evt) {
         if (evt.which == 16) {
             shiftDown = false;
+        }
+        if (evt.which == 17) {
+            ctrlDown = false;
         }
     });
     
@@ -104,7 +111,6 @@ function main() {
         mouseX = evt.offsetX;
         mouseY = evt.offsetY;
     });
-    startButtons();
     setInterval(doFrame, 5);
 }
 
@@ -115,16 +121,6 @@ function updateSettings() {
     $('#FixedPointCreation')[0].innerHTML = fixedPointCreationActivated ? "enabled" : "disabled";
     $('#Paused')[0].innerHTML = paused ? "paused" : "unpaused";
     $('#SpringSize')[0].innerHTML = springLength;
-}
-
-function startButtons() {
-    $("#toggleGravity").click(function() { gravityActivated = !gravityActivated; });
-    $("#toggleSprings").click(function() { springDrawingActivated = !springDrawingActivated; });
-    $("#togglePoints").click(function() { pointDrawingActivatedd = !pointDrawingActivatedd; });
-    $("#increaseSpringSize").click(function() { springLength = springLength + 10 });
-    $("#decreaseSpringSize").click(function() { springLength = Math.max(springLength - 10, 10) });
-    $("#pause").click(function() { paused = !paused; });
-    $("#deletePoints").click(function() { points = []; springs = [] });
 }
 
 // Draws the scene.
@@ -142,7 +138,7 @@ function draw() {
 // Set up canvas, resize it to fit the screen and clear every frame.
 function setUpCanvas() {
     var ctx = $('#myCanvas')[0].getContext('2d');
-    windowWidth = window.innerWidth - 200;
+    windowWidth = window.innerWidth;
     windowHeight = window.innerHeight;
     ctx.canvas.width = windowWidth;
     ctx.canvas.height = windowHeight;
@@ -217,11 +213,25 @@ function createPoint() {
 
 // Selects points that are next to the mouse cursor when you right click.
 function selectPoints() {
+    var foundDeletedSpring = false;
     for (var i = 0; i < points.length; i++) {
         if (new Vector(mouseX, mouseY).subtract(points[i].position).length() < 20) {
             points[i].isSelected = true;
         }
+
+        if (ctrlDown){
+            var tempSprings = [];
+            for (var j = 0; j  < springs.length; j++) {
+                if (!(springs[j].first == points[i] || springs[j].second == points[i])) {
+                    tempSprings.push(springs[j]);
+                    foundDeletedSpring = true;
+                }
+            }
+            
+        }
     }
+    if (foundDeletedSpring)
+        springs = tempSprings.splice(0);
 }
 
 // checks whether or not the spring exists.
@@ -378,8 +388,9 @@ function Vector(x, y) {
         return new Vector(this.x, this.y);
     };
     this.normalize = function () {
+        var vectorLength = this.length();
         if (this.length() > 0) {
-            return new Vector(this.x / this.length(), this.y / this.length());
+            return new Vector(this.x / vectorLength, this.y / vectorLength);
         }
         else {
             return new Vector(0.1, 0.1);
