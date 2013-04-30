@@ -48,3 +48,10 @@
     padding-top: 2px;
     padding: 7px;
 }
+
+#contact {
+    position: absolute;
+    bottom: 0px;
+    padding-bottom: 3px;
+    padding-left: 7px;
+}
