@@ -270,35 +270,36 @@ function connectPoints() {
 function Spring(firstPoint, secondPoint) {
     this.first = firstPoint;
     this.second = secondPoint;
-
-    // checks if the spring is equal to another.
-    this.equals = function (spring) {
-        if (this.first == spring.first && this.second == spring.second) {
-            return true;
-        }
-        return false;
-    };
-    // updates the spring, attracting the two affected points.
-    this.update = function () {
-        var distanceVector = this.second.position.subtract(this.first.position);
-        var distance = distanceVector.length();
-        var adjustedDistance = distance - springLength;
-        var velocity = distanceVector.normalize().multiply(1 / 100).multiply(adjustedDistance);
-        this.first.velocity = this.first.velocity.add(velocity);
-        this.second.velocity = this.second.velocity.subtract(velocity);
-    };
-    // draws the spring.
-    this.draw = function (ctx) {
-        if (springDrawingActivated) {
-            ctx.lineWidth = 1;
-            ctx.strokeStyle = '#61CE3C';
-            ctx.beginPath();
-            ctx.moveTo(this.first.position.x, this.first.position.y);
-            ctx.lineTo(this.second.position.x, this.second.position.y);
-            ctx.stroke();
-        }
-    };
 }
+
+// checks if the spring is equal to another.
+Spring.prototype.equals = function (spring) {
+    if (this.first == spring.first && this.second == spring.second) {
+        return true;
+    }
+    return false;
+};
+
+// updates the spring, attracting the two affected points.
+Spring.prototype.update = function () {
+    var distanceVector = this.second.position.subtract(this.first.position);
+    var distance = distanceVector.length();
+    var adjustedDistance = distance - springLength;
+    var velocity = distanceVector.normalize().multiply(1 / 100).multiply(adjustedDistance);
+    this.first.velocity = this.first.velocity.add(velocity);
+    this.second.velocity = this.second.velocity.subtract(velocity);
+};
+// draws the spring.
+Spring.prototype.draw = function (ctx) {
+    if (springDrawingActivated) {
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = '#61CE3C';
+        ctx.beginPath();
+        ctx.moveTo(this.first.position.x, this.first.position.y);
+        ctx.lineTo(this.second.position.x, this.second.position.y);
+        ctx.stroke();
+    }
+};
 
 // MassPoint object, for storing and operating on points in 2d space.
 function MassPoint(posX, posY) {
@@ -308,92 +309,98 @@ function MassPoint(posX, posY) {
     this.isDragged = false;
     this.isSelected = false;
     this.isFixed = false;
-
-    // updates the masspoint - moves it and changes the velocity.
-    this.update = function () {
-        if (!this.isFixed) {
-            if (gravityActivated) {
-                this.velocity = this.velocity.add(new Vector(0, gravity));
-            }
-            this.lastPosition = this.position.copy();
-            this.position = this.position.add(this.velocity);
-            //this.position = this.position.add(this.position.subtract(this.lastPosition));
-            this.velocity = this.velocity.multiply(1 - airResistance);
-            this.collideWithWalls();
-        }
-    };
-    // draws the masspoint.
-    this.draw = function (ctx) {
-        if (pointDrawingActivated) {
-            if (this.isSelected) {
-                ctx.fillStyle = '#FBDE2D';
-            }
-            else if (this.isFixed) {
-                ctx.fillStyle = '#FF6BCF';
-            }
-            else {
-                ctx.fillStyle = '#61CE3C';
-            }
-            ctx.beginPath();
-            ctx.arc(this.position.x, this.position.y, boxSize / 2 - 1, 0, 2 * Math.PI, false);
-            ctx.fill();
-        }
-    };
-    // handles collision of the masspoint with the sides of the window.
-    this.collideWithWalls = function () {
-        if (this.position.x < boxSize / 2) { // if too far left.
-            this.position.x = boxSize / 2;
-            this.velocity.x = Math.abs(this.velocity.x) * (1 - bounceResistance);
-            this.velocity.y *= 1 - friction;
-        }
-
-        if (this.position.y < boxSize / 2) { // if too far up.
-            this.position.y = boxSize / 2;
-            this.velocity.y = Math.abs(this.velocity.y) * (1 - bounceResistance);
-            this.velocity.x *= 1 - friction;
-        }
-
-        if (this.position.x > windowWidth - boxSize / 2) { // if too far to the right.
-            this.position.x = windowWidth - boxSize / 2;
-            this.velocity.x = Math.abs(this.velocity.x) * -1 * (1 - bounceResistance);
-            this.velocity.y *= 1 - friction;
-        }
-
-        if (this.position.y > windowHeight - boxSize / 2) { // if too far to the bottom.
-            this.position.y = windowHeight - boxSize / 2;
-            this.velocity.y = Math.abs(this.velocity.y) * -1 * (1 - bounceResistance);
-            this.velocity.x *= 1 - friction;
-        }
-    };
 }
+
+ // updates the masspoint - moves it and changes the velocity.
+MassPoint.prototype.update = function () {
+    if (!this.isFixed) {
+        if (gravityActivated) {
+            this.velocity = this.velocity.add(new Vector(0, gravity));
+        }
+        this.lastPosition = this.position.copy();
+        this.position = this.position.add(this.velocity);
+        //this.position = this.position.add(this.position.subtract(this.lastPosition));
+        this.velocity = this.velocity.multiply(1 - airResistance);
+        this.collideWithWalls();
+    }
+};
+
+// draws the masspoint.
+MassPoint.prototype.draw = function (ctx) {
+    if (pointDrawingActivated) {
+        if (this.isSelected) {
+            ctx.fillStyle = '#FBDE2D';
+        }
+        else if (this.isFixed) {
+            ctx.fillStyle = '#FF6BCF';
+        }
+        else {
+            ctx.fillStyle = '#61CE3C';
+        }
+        ctx.beginPath();
+        ctx.arc(this.position.x, this.position.y, boxSize / 2 - 1, 0, 2 * Math.PI, false);
+        ctx.fill();
+    }
+};
+// handles collision of the masspoint with the sides of the window.
+MassPoint.prototype.collideWithWalls = function () {
+    if (this.position.x < boxSize / 2) { // if too far left.
+        this.position.x = boxSize / 2;
+        this.velocity.x = Math.abs(this.velocity.x) * (1 - bounceResistance);
+        this.velocity.y *= 1 - friction;
+    }
+
+    if (this.position.y < boxSize / 2) { // if too far up.
+        this.position.y = boxSize / 2;
+        this.velocity.y = Math.abs(this.velocity.y) * (1 - bounceResistance);
+        this.velocity.x *= 1 - friction;
+    }
+
+    if (this.position.x > windowWidth - boxSize / 2) { // if too far to the right.
+        this.position.x = windowWidth - boxSize / 2;
+        this.velocity.x = Math.abs(this.velocity.x) * -1 * (1 - bounceResistance);
+        this.velocity.y *= 1 - friction;
+    }
+
+    if (this.position.y > windowHeight - boxSize / 2) { // if too far to the bottom.
+        this.position.y = windowHeight - boxSize / 2;
+        this.velocity.y = Math.abs(this.velocity.y) * -1 * (1 - bounceResistance);
+        this.velocity.x *= 1 - friction;
+    }
+};
 
 // Vector object for storing and operating on two-dimensional vectors.
 function Vector(x, y) {
     this.x = x;
     this.y = y;
-
-    this.add = function (other) {
-        return new Vector(this.x + other.x, this.y + other.y);
-    };
-    this.subtract = function (other) {
-        return this.add(other.multiply(-1));
-    };
-    this.multiply = function (scalar) {
-        return new Vector(this.x * scalar, this.y * scalar);
-    };
-    this.length = function () {
-        return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
-    };
-    this.copy = function () {
-        return new Vector(this.x, this.y);
-    };
-    this.normalize = function () {
-        var vectorLength = this.length();
-        if (this.length() > 0) {
-            return new Vector(this.x / vectorLength, this.y / vectorLength);
-        }
-        else {
-            return new Vector(0.1, 0.1);
-        }
-    };
 }
+
+Vector.prototype.add = function (other) {
+    return new Vector(this.x + other.x, this.y + other.y);
+};
+
+Vector.prototype.subtract = function (other) {
+    return this.add(other.multiply(-1));
+};
+
+Vector.prototype.multiply = function (scalar) {
+    return new Vector(this.x * scalar, this.y * scalar);
+};
+
+Vector.prototype.length = function () {
+    return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
+};
+
+Vector.prototype.copy = function () {
+    return new Vector(this.x, this.y);
+};
+
+Vector.prototype.normalize = function () {
+    var vectorLength = this.length();
+    if (this.length() > 0) {
+        return new Vector(this.x / vectorLength, this.y / vectorLength);
+    }
+    else {
+        return new Vector(0.1, 0.1);
+    }
+};
