@@ -23,6 +23,8 @@ var shiftDown = false;
 var leftMouseDown = false;
 var ctrlDown = false;
 
+var selectRadius = 20;
+
 var points = [];
 var springs = [];
 
@@ -93,8 +95,11 @@ function main() {
         if (evt.button == 1) {
             middleMouseDown = true;
         }
-        if (evt.button == 0 && !shiftDown) {
+        if (evt.button == 0 && !shiftDown && !ctrlDown) {
             createPoint();
+        }
+        if (evt.button == 0 && ctrlDown) {
+            deletePoints();
         }
     });
     
@@ -121,6 +126,8 @@ function updateSettings() {
     $('#FixedPointCreation')[0].innerHTML = fixedPointCreationActivated ? "enabled" : "disabled";
     $('#Paused')[0].innerHTML = paused ? "paused" : "unpaused";
     $('#SpringSize')[0].innerHTML = springLength;
+    $('#AmountOfPoints')[0].innerHTML = points.length;
+    $('#AmountOfSprings')[0].innerHTML = springs.length;
 }
 
 // Draws the scene.
@@ -172,7 +179,7 @@ function doFrame() {
 function dragPoints() {
     for (var i = 0; i < points.length; i++) {
         if (middleMouseDown || (shiftDown && leftMouseDown)) {
-            if (new Vector(mouseX, mouseY).subtract(points[i].position).length() < 20) {
+            if (new Vector(mouseX, mouseY).subtract(points[i].position).length() < selectRadius) {
                 if (!points[i].isDragged && !draggedExists) {
                     points[i].isDragged = true;
                     draggedExists = true;
@@ -202,6 +209,33 @@ function dragPoints() {
     }
 }
 
+// deletes points that are closest to the mose when clicked.
+function deletePoints() {
+    var pointsToKeep = [];
+    var springsToKeep = [];
+    var deletedAtLeastOnePoint = false;
+
+    for (var i = 0; i < points.length; i++) {
+        if (points[i].position.subtract(new Vector(mouseX, mouseY)).length() > selectRadius) {
+            pointsToKeep.push(points[i]);
+        }
+        else {
+            deletedAtLeastOnePoint = true;
+            for (var j = 0; j < springs.length; j++) {
+                if (springs[j].first != points[i] && springs[j].second != points[i]) {
+                    if ($.inArray(springsToKeep, springs[j])) {
+                        springsToKeep.push(springs[j]);
+                    }
+                }
+            }
+        }
+    }
+    if(deletedAtLeastOnePoint) {
+        springs = springsToKeep;
+        points = pointsToKeep;
+    }
+}
+
 // Creates a mass point with the mouse position.
 function createPoint() {
     var newPoint = new MassPoint(mouseX, mouseY);
@@ -215,23 +249,10 @@ function createPoint() {
 function selectPoints() {
     var foundDeletedSpring = false;
     for (var i = 0; i < points.length; i++) {
-        if (new Vector(mouseX, mouseY).subtract(points[i].position).length() < 20) {
+        if (new Vector(mouseX, mouseY).subtract(points[i].position).length() < selectRadius) {
             points[i].isSelected = true;
         }
-
-        if (ctrlDown){
-            var tempSprings = [];
-            for (var j = 0; j  < springs.length; j++) {
-                if (!(springs[j].first == points[i] || springs[j].second == points[i])) {
-                    tempSprings.push(springs[j]);
-                    foundDeletedSpring = true;
-                }
-            }
-            
-        }
     }
-    if (foundDeletedSpring)
-        springs = tempSprings.splice(0);
 }
 
 // checks whether or not the spring exists.
@@ -379,12 +400,12 @@ Vector.prototype.add = function (other) {
     return new Vector(this.x + other.x, this.y + other.y);
 };
 
-Vector.prototype.subtract = function (other) {
-    return this.add(other.multiply(-1));
-};
-
 Vector.prototype.multiply = function (scalar) {
     return new Vector(this.x * scalar, this.y * scalar);
+};
+
+Vector.prototype.subtract = function (other) {
+    return this.add(other.multiply(-1));
 };
 
 Vector.prototype.length = function () {
