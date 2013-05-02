@@ -33,7 +33,7 @@ var pointColor = '#ECD56E';
 var selectedColor = '#ACA68E';
 var fixedColor = '#85CFB9';
 
-var isTextWhite = true;
+var styleCount = 0;
 
 // Main function, called on document load.
 function main() {
@@ -80,9 +80,12 @@ function main() {
             ctrlDown = true;
         }
         else if(evt.which == 84) { // t key
-            $('body').animate({color : isTextWhite ? 'white' : '#576375'}, 1000)
-            $('.setting').animate({color : isTextWhite ? 'white' : '#7F90AA'}, 1000)
-            isTextWhite = !isTextWhite;
+            styleCount++;
+            styleCount %= 3;
+
+            $('body').animate({color : styleCount == 0 ? '#576375' : (styleCount == 1 ? 'white' : '#0C1021')}, 1000)
+            $('.setting').animate({color : styleCount == 0 ? '#7F90AA' : (styleCount == 1 ? 'white' : '#0C1021')}, 1000)
+
         }
     });
     
