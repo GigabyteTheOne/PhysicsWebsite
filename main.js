@@ -1,14 +1,17 @@
 ﻿var mouseX = 0;
 var mouseY = 0;
+var lastMouseX = 0;
+var lastMouseY = 0;
 var windowWidth = 0;
 var windowHeight = 0;
 
+var scale = 2.4;
 var gravity = 0.06;
 var airResistance = 0.01;
 var bounceResistance = 0.5;
 var friction = 0.2;
-var boxSize = 10;
-var springLength = 100;
+var boxSize = 10*scale;
+var springLength = 100*scale;
 var tempBoxSize = boxSize;
 
 var gravityActivated = true;
@@ -129,6 +132,51 @@ function main() {
         mouseX = evt.offsetX;
         mouseY = evt.offsetY;
     });
+
+    $('#myCanvas').on({ 'touchstart': function (evt) {
+        if (evt.originalEvent.changedTouches && evt.originalEvent.changedTouches.length === 1)
+        {
+            lastMouseX = evt.originalEvent.changedTouches[0].clientX;
+            lastMouseY = evt.originalEvent.changedTouches[0].clientY;
+        }
+        evt.originalEvent.preventDefault();
+    }});
+
+    $('#body').on({ 'touchend': function(evt) {
+        if (evt.originalEvent.changedTouches && evt.originalEvent.changedTouches.length === 1)
+        {
+            mouseX = evt.originalEvent.changedTouches[0].clientX;
+            mouseY = evt.originalEvent.changedTouches[0].clientY;
+
+            middleMouseDown = false;
+
+            if ((Math.abs(mouseX - lastMouseX) < 5) && (Math.abs(mouseY - lastMouseY) < 5))
+            {
+                //it's usial click
+                if (isPointOnCoords())
+                    selectPoints();
+                else
+                    createPoint();
+            }
+            else
+            {
+                //there was moving action
+            }
+        }
+        evt.originalEvent.preventDefault();
+    }});
+
+    $('#myCanvas').on({ 'touchmove': function(evt) {
+        if (evt.originalEvent.changedTouches && evt.originalEvent.changedTouches.length === 1)
+        {
+            middleMouseDown = true;
+            mouseX = evt.originalEvent.changedTouches[0].clientX;
+            mouseY = evt.originalEvent.changedTouches[0].clientY; 
+        }
+        evt.originalEvent.preventDefault();
+    }});
+
+
     setInterval(doFrame, 5);
 }
 
@@ -247,6 +295,15 @@ function deletePoints() {
         springs = springsToKeep;
         points = pointsToKeep;
     }
+}
+
+function isPointOnCoords() {
+    for (var i = 0; i < points.length; i++) {
+        if (new Vector(mouseX, mouseY).subtract(points[i].position).length() < selectRadius) {
+            return true;
+        }
+    }
+    return false;
 }
 
 // Creates a mass point with the mouse position.
