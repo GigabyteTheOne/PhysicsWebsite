@@ -4,6 +4,7 @@
 <head>
     <title>ChubMarine</title>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" ></script>
+    <script src="jquery-ui-1.10.2.custom.js" type="text/javascript"></script>
     <script src="main.js" type="text/javascript"></script>
     <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -21,12 +22,13 @@
             1. Left click to create new a new point. <br/>
             2. Left click near a point while holding control to delete that point. <br/>
             3. Right click to select a point. If more than two points are selected, they will be connected with a spring. <br/>
-            4. Middle mouse click or left click while holding shift to drag a point. <br/><br/>
+            4. Middle mouse click or hold shift to drag a point. <br/><br/>
 
             Press "p" to toggle drawing of points. <br/>
             Press "s" to toggle drawing of springs. <br/>
             Press "f" to toggle creating points that are fixed in space. <br/>
             Press "u" to pause. <br/>
+            Press "t" to change text color <br/>
             Press "=" to increase the spring size. <br/>
             Press "-" to decrease the spring size. <br/>
             Press "delete" to delete all the springs and points. <br/>
@@ -42,10 +44,28 @@
                 The amount of springs is <span id="AmountOfSprings" class="setting"></span> <br/>
             </span>
         </div>
-        <div class="fb-like" data-href="http://www.chubmarine.com/" data-send="true" data-layout="button_count" data-width="80" data-show-faces="false" data-colorscheme="dark"></div>
+        <div class="fb-like" data-href="http://www.chubmarine.com/" data-send="true" data-layout="button_count" data-width="80" data-show-faces="false"></div>
         <canvas id="myCanvas" oncontextmenu="return false;"></canvas>
         <div id="contact">
             Contact me at subsbox@hotmail.com
         </div>
+
+        <!-- Start of StatCounter Code for Default Guide -->
+        <script type="text/javascript">
+        var sc_project=8915761; 
+        var sc_invisible=1; 
+        var sc_security="5adc3226"; 
+        var scJsHost = (("https:" == document.location.protocol) ?
+        "https://secure." : "http://www.");
+        document.write("<sc"+"ript type='text/javascript' src='" +
+        scJsHost+
+        "statcounter.com/counter/counter.js'></"+"script>");
+        </script>
+        <noscript><div class="statcounter"><a title="website
+        statistics" href="http://statcounter.com/free-web-stats/"
+        target="_blank"><img class="statcounter"
+        src="http://c.statcounter.com/8915761/0/5adc3226/1/"
+        alt="website statistics"></a></div></noscript>
+        <!-- End of StatCounter Code for Default Guide -->
     </body>
 </html>

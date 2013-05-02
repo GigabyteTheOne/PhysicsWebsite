@@ -3,7 +3,7 @@ var mouseY = 0;
 var windowWidth = 0;
 var windowHeight = 0;
 
-var gravity = 0.04;
+var gravity = 0.06;
 var airResistance = 0.01;
 var bounceResistance = 0.5;
 var friction = 0.2;
@@ -28,7 +28,12 @@ var selectRadius = 20;
 var points = [];
 var springs = [];
 
+var springColor = '#ECD56E';
+var pointColor = '#ECD56E';
+var selectedColor = '#ACA68E';
+var fixedColor = '#85CFB9';
 
+var isTextWhite = true;
 
 // Main function, called on document load.
 function main() {
@@ -73,6 +78,11 @@ function main() {
         }
         else if(evt.which == 17) { // ctrl key
             ctrlDown = true;
+        }
+        else if(evt.which == 84) { // t key
+            $('body').animate({color : isTextWhite ? 'white' : '#576375'}, 1000)
+            $('.setting').animate({color : isTextWhite ? 'white' : '#7F90AA'}, 1000)
+            isTextWhite = !isTextWhite;
         }
     });
     
@@ -314,7 +324,7 @@ Spring.prototype.update = function () {
 Spring.prototype.draw = function (ctx) {
     if (springDrawingActivated) {
         ctx.lineWidth = 1;
-        ctx.strokeStyle = '#61CE3C';
+        ctx.strokeStyle = springColor;
         ctx.beginPath();
         ctx.moveTo(this.first.position.x, this.first.position.y);
         ctx.lineTo(this.second.position.x, this.second.position.y);
@@ -350,13 +360,13 @@ MassPoint.prototype.update = function () {
 MassPoint.prototype.draw = function (ctx) {
     if (pointDrawingActivated) {
         if (this.isSelected) {
-            ctx.fillStyle = '#FBDE2D';
+            ctx.fillStyle = selectedColor;
         }
         else if (this.isFixed) {
-            ctx.fillStyle = '#FF6BCF';
+            ctx.fillStyle = fixedColor;
         }
         else {
-            ctx.fillStyle = '#61CE3C';
+            ctx.fillStyle = pointColor;
         }
         ctx.beginPath();
         ctx.arc(this.position.x, this.position.y, boxSize / 2 - 1, 0, 2 * Math.PI, false);
